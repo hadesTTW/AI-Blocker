@@ -4,7 +4,7 @@
     "version": "1.0",
     "description": "Blocks all AI content on the internet.",
     "permissions": ["storage"],
-    "host_permissions": ["https://breadcraft.me/*"],
+    "host_permissions": ["https://exordium.breadcraft.me/*"],
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
