@@ -1,0 +1,15 @@
+{
+    "manifest_version": 3,
+    "name": "AI Blocker",
+    "version": "1.0",
+    "description": "Blocks all AI content on the internet.",
+    "permissions": ["storage"],
+    "host_permissions": ["https://breadcraft.me/*"],
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["content.js"]
+      }
+    ]
+  }
+  
