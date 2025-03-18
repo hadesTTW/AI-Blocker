@@ -14,8 +14,42 @@ async function fetchAndCacheRules() {
 // Fetch immediately upon extension startup
 fetchAndCacheRules();
 
-// Update rules every 15 minutes (optional, but recommended)
+// Update rules every 15 minutes
 setInterval(fetchAndCacheRules, 15 * 60 * 1000);
+
+// Initialize extension enabled state to true on first install
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.storage.local.set({ enabled: true });
+});
+
+// Toggle extension state when toolbar icon is clicked
+chrome.action.onClicked.addListener(async (tab) => {
+  const { enabled } = await chrome.storage.local.get('enabled');
+  const newState = !enabled;
+
+  await chrome.storage.local.set({ enabled: newState });
+
+  // Set the appropriate icon
+  chrome.action.setIcon({
+    path: newState ? "icons/icon.png" : "icons/icon-off.png"
+  });
+
+  console.log('Extension enabled:', newState);
+
+  chrome.tabs.reload(tab.id);
+});
+
+// Set icon correctly on extension startup
+async function setInitialIcon() {
+  const { enabled } = await chrome.storage.local.get('enabled');
+  chrome.action.setIcon({
+    path: enabled !== false ? "icons/icon.png" : "icons/icon-off.png"
+  });
+}
+
+// Run on extension startup
+chrome.runtime.onInstalled.addListener(setInitialIcon);
+chrome.runtime.onStartup.addListener(setInitialIcon);
 
 // Listen for content script requests for rules
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -23,7 +57,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     chrome.storage.local.get(['rules'], ({ rules }) => {
       sendResponse(rules || {});
     });
-    // Necessary to use sendResponse asynchronously
     return true;
   }
 });
