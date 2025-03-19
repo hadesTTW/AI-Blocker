@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "AI Blocker",
-  "version": "3.0",
+  "version": "4.0",
   "description": "Blocks all AI content on the internet.",
   "permissions": ["storage", "scripting"],
   "host_permissions": ["<all_urls>"],
@@ -26,7 +26,12 @@
     "gecko": {
       "id": "{85ed0016-acf5-4b5b-813e-ddfc1733bee0}"
     }
+  },
+  "options_ui": {
+  "page": "options.html",
+  "open_in_tab": true
   }
+
 }
 
   
