@@ -17,18 +17,18 @@ async function isExtensionEnabled() {
 function applyRules(rules) {
   const currentHostname = window.location.hostname;
 
-  Object.keys(rules).forEach(site => {
-    if (currentHostname.includes(site)) {
-      rules[site].forEach(selector => {
-        document.querySelectorAll(selector).forEach(el => {
-          if (el.style.display !== 'none') {
-            el.style.setProperty('display', 'none', 'important');
-          }
-        });
+  rules.forEach(rule => {
+    const [site, selector] = rule.split('##');
+    if (currentHostname.includes(site) && selector) {
+      document.querySelectorAll(selector).forEach(el => {
+        if (el.style.display !== 'none') {
+          el.style.setProperty('display', 'none', 'important');
+        }
       });
     }
   });
 }
+
 
 // Observe dynamic DOM changes
 async function observeAndApplyRules() {

@@ -1,4 +1,4 @@
-const RULES_URL = 'https://exordium.breadcraft.me/resources/ai%20blocker/rules.json';
+const RULES_URL = 'https://exordium.breadcraft.me/resources/ai%20blocker/filters.txt';
 
 async function fetchAndCacheRules() {
   try {
