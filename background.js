@@ -4,7 +4,8 @@ async function fetchAndCacheRules() {
   try {
     const response = await fetch(`${RULES_URL}?t=${Date.now()}`);
     if (!response.ok) throw new Error('Network response was not ok');
-    const rules = await response.json();
+    const textRules = await response.text();
+    const rules = textRules.split('\n').map(rule => rule.trim()).filter(rule => rule);
     await chrome.storage.local.set({ rules, updatedAt: Date.now() });
   } catch (error) {
     console.error('Failed fetching rules:', error);
