@@ -7,25 +7,36 @@ function getRulesFromBackground() {
   });
 }
 
+// Check if the extension is enabled
+async function isExtensionEnabled() {
+  const { enabled } = await chrome.storage.local.get('enabled');
+  return enabled !== false; // Default to true if unset
+}
+
 // Apply rules to the current page
 function applyRules(rules) {
   const currentHostname = window.location.hostname;
 
-  Object.keys(rules).forEach(site => {
-    if (currentHostname.includes(site)) {
-      rules[site].forEach(selector => {
-        document.querySelectorAll(selector).forEach(el => {
-          if (el.style.display !== 'none') {
-            el.style.setProperty('display', 'none', 'important');
-          }
-        });
+  rules.forEach(rule => {
+    const [site, selector] = rule.split('##');
+    if (currentHostname.includes(site) && selector) {
+      document.querySelectorAll(selector).forEach(el => {
+        if (el.style.display !== 'none') {
+          el.style.setProperty('display', 'none', 'important');
+        }
       });
     }
   });
 }
 
+
 // Observe dynamic DOM changes
 async function observeAndApplyRules() {
+  if (!await isExtensionEnabled()) {
+    console.log('AI Blocker is currently disabled');
+    return;
+  }
+
   const rules = await getRulesFromBackground();
 
   // Initial blocking
@@ -40,8 +51,9 @@ async function observeAndApplyRules() {
     attributes: true,        // Observe attribute changes
     attributeFilter: ['class', 'style'] // Observe only relevant attributes
   });
+
+  console.log('AI Blocker is running on', window.location.hostname);
 }
 
 // Run the observer
 observeAndApplyRules();
-console.log('AI Blocker is running on', window.location.hostname);
