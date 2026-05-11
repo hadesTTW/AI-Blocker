@@ -1,4 +1,4 @@
-const RULES_URL = 'https://exordium.breadcraft.me/resources/ai%20blocker/filters.txt';
+const RULES_URL = 'https://raw.githubusercontent.com/hadesTTW/exordium/refs/heads/master/resources/ai%20blocker/filters.txt';
 
 async function fetchAndCacheRules() {
   try {
